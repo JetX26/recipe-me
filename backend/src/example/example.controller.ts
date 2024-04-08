@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ExampleService } from './example.service';
 import { CreateExampleDto } from './dto/create-example.dto';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 @Controller('example')
 export class ExampleController {
@@ -8,7 +9,7 @@ export class ExampleController {
 
   @Get()
   test() {
-    this.exampleService.sayHello();
+    return this.exampleService.getRecipe();
   }
 
   @Post()

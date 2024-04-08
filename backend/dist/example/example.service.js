@@ -7,10 +7,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExampleService = void 0;
+const generative_ai_1 = require("@google/generative-ai");
 const common_1 = require("@nestjs/common");
+const gemini = new generative_ai_1.GoogleGenerativeAI('AIzaSyDUFdJG0FYEcHPhYNS4DsbfRaWqhbSJH2M');
 let ExampleService = class ExampleService {
     sayHello() {
         console.log('Hello World');
+    }
+    async getRecipe() {
+        const model = gemini.getGenerativeModel({ model: 'gemini-pro' });
+        const result = await model.generateContent('Give me a food recipe using some or all the following ingredients: Apples, Sugar, Oatmeal, Butter.');
+        return result.response.text();
     }
 };
 exports.ExampleService = ExampleService;

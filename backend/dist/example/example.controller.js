@@ -21,7 +21,7 @@ let ExampleController = class ExampleController {
         this.exampleService = exampleService;
     }
     test() {
-        this.exampleService.sayHello();
+        return this.exampleService.getRecipe();
     }
     getExample(id, body) {
         return {
