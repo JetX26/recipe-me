@@ -51,7 +51,7 @@ export default function App() {
         ingredients,
         id: "2",
       });
-      setRecipe(data);
+      if (data) setRecipe(data);
       console.log(data);
     } catch (error) {
       throw new Error("Failed to get data");
@@ -72,7 +72,7 @@ export default function App() {
         <Text>Logo</Text>
         <Text>History</Text>
       </View>
-      {}
+      {recipe && recipe}
       <KeyboardAvoidingView
         style={styles.keybavoidview}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
