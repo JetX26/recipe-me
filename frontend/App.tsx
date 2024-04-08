@@ -1,6 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import _ from 'lodash'
-
 
 import {
   Button,
@@ -17,14 +15,13 @@ import { useState } from "react";
 import axios from "axios";
 
 export default function App() {
-  const [inputs, setInputs] = useState('');
+  const [inputs, setInputs] = useState("");
 
-  const [ingredients, setIngredients] = useState([''])
+  const [ingredients, setIngredients] = useState([""]);
 
   const [recipe, setRecipe] = useState("");
 
-  const inputRef = useRef(null)
-
+  const inputRef = useRef(null);
 
   const styles = StyleSheet.create({
     container: {
@@ -55,9 +52,9 @@ export default function App() {
     ingredientsStyle: {
       flex: 1,
       flexDirection: "row",
-      alignItems: 'center',
-      gap: 32
-    }
+      alignItems: "center",
+      gap: 32,
+    },
 
     // logoText: {
     //   borderStyle: 'solid',
@@ -73,25 +70,23 @@ export default function App() {
       //   ingredientState,
       //   id: "2",
       // });
-
-
       // if (data) setRecipe(data);
       // console.log(data)
-
     } catch (error) {
       throw new Error("Failed to get data");
     }
   };
 
   useEffect(() => {
-    console.log(inputs)
-  }, [inputs])
+    console.log(inputs);
+  }, [inputs]);
 
   const handleRemoveItem = (itemToRemove: String) => {
-    const newIngredientsArray = ingredients.filter((item) => item !== itemToRemove)
-    setIngredients(newIngredientsArray)
-  }
-
+    const newIngredientsArray = ingredients.filter(
+      (item) => item !== itemToRemove
+    );
+    setIngredients(newIngredientsArray);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -105,14 +100,23 @@ export default function App() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         {ingredients.map((item, id) => {
-          return <View key={id} style={styles.ingredientsStyle}>
-            <Text>{item}</Text>
-            {item && <View style={{ padding: 4 }}>
-              <Text onPress={() => {
-                handleRemoveItem(item)
-              }} style={{ fontSize: 17, fontWeight: "bold" }}>X</Text>
-            </View>}
-          </View>
+          return (
+            <View key={id} style={styles.ingredientsStyle}>
+              <Text>{item}</Text>
+              {item && (
+                <View style={{ padding: 4 }}>
+                  <Text
+                    onPress={() => {
+                      handleRemoveItem(item);
+                    }}
+                    style={{ fontSize: 17, fontWeight: "bold" }}
+                  >
+                    X
+                  </Text>
+                </View>
+              )}
+            </View>
+          );
         })}
         <TextInput
           ref={inputRef}
@@ -125,19 +129,19 @@ export default function App() {
           title="Add Ingredient"
           onPress={() => {
             if (inputs) {
-              ingredients.push(inputs)
-              console.log(inputs)
-              setInputs('')
+              ingredients.push(inputs);
+              console.log(inputs);
+              setInputs("");
             } else {
-              alert('Please type in something :)')
+              alert("Please type in something :)");
             }
 
             if (inputRef.current) {
               const textInputElement = inputRef.current as TextInput;
-              textInputElement.clear()
+              textInputElement.clear();
             }
-          }}>
-        </Button>
+          }}
+        ></Button>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
