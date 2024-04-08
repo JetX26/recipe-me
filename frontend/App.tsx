@@ -124,9 +124,14 @@ export default function App() {
         <Button
           title="Add Ingredient"
           onPress={() => {
-            ingredients.push(inputs)
-            console.log(inputs)
-            setInputs('')
+            if (inputs) {
+              ingredients.push(inputs)
+              console.log(inputs)
+              setInputs('')
+            } else {
+              alert('Please type in something :)')
+            }
+
             if (inputRef.current) {
               const textInputElement = inputRef.current as TextInput;
               textInputElement.clear()
