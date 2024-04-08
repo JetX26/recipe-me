@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import _ from 'lodash'
+
+
 import {
   Button,
   KeyboardAvoidingView,
@@ -14,9 +17,14 @@ import { useState } from "react";
 import axios from "axios";
 
 export default function App() {
-  const [ingredients, setIngredients] = useState("");
+  const [inputs, setInputs] = useState('');
+
+  const [ingredients, setIngredients] = useState([''])
 
   const [recipe, setRecipe] = useState("");
+
+  const inputRef = useRef(null)
+
 
   const styles = StyleSheet.create({
     container: {
@@ -43,33 +51,52 @@ export default function App() {
       padding: "5%",
       width: "100%",
     },
+
+    ingredientsStyle: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: 'center',
+      gap: 32
+    }
+
+    // logoText: {
+    //   borderStyle: 'solid',
+    //   borderWidth: 1,
+    //   padding: 1,
+    //   borderColor: 'black'
+    // }
   });
 
   const sendData = async () => {
     try {
-      const { data } = await axios.post("http://localhost:3001/recipe", {
-        ingredients,
-        id: "2",
-      });
-      if (data) setRecipe(data);
-      console.log(data);
+      // const { data } = await axios.post("http://localhost:3001/recipe", {
+      //   ingredientState,
+      //   id: "2",
+      // });
+
+
+      // if (data) setRecipe(data);
+      // console.log(data)
+
     } catch (error) {
       throw new Error("Failed to get data");
     }
   };
 
+  useEffect(() => {
+    console.log(inputs)
+  }, [inputs])
+
+  const handleRemoveItem = (itemToRemove: String) => {
+    const newIngredientsArray = ingredients.filter((item) => item !== itemToRemove)
+    setIngredients(newIngredientsArray)
+  }
+
+
   return (
     <SafeAreaView style={styles.container}>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          width: "100%",
-          padding: 10,
-        }}
-      >
-        <Text>Logo</Text>
+      <View style={styles.nav}>
+        <Text>Recipe Me</Text>
         <Text>History</Text>
       </View>
       {recipe && recipe}
@@ -77,11 +104,35 @@ export default function App() {
         style={styles.keybavoidview}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
+        {ingredients.map((item, id) => {
+          return <View key={id} style={styles.ingredientsStyle}>
+            <Text>{item}</Text>
+            {item && <View style={{ padding: 4 }}>
+              <Text onPress={() => {
+                handleRemoveItem(item)
+              }} style={{ fontSize: 17, fontWeight: "bold" }}>X</Text>
+            </View>}
+          </View>
+        })}
         <TextInput
-          onChangeText={setIngredients}
-          placeholder="Type in your ingredients"
+          ref={inputRef}
+          value={inputs}
+          onChangeText={setInputs}
+          placeholder="Type in your ingredients..."
         ></TextInput>
-        <Button title="Submit" onPress={sendData}></Button>
+
+        <Button
+          title="Add Ingredient"
+          onPress={() => {
+            ingredients.push(inputs)
+            console.log(inputs)
+            setInputs('')
+            if (inputRef.current) {
+              const textInputElement = inputRef.current as TextInput;
+              textInputElement.clear()
+            }
+          }}>
+        </Button>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
