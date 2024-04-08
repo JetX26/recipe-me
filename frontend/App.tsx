@@ -120,11 +120,10 @@ export default function App() {
           onChangeText={setInputs}
           placeholder="Type in your ingredients..."
         ></TextInput>
-
         <Button
           title="Add Ingredient"
           onPress={() => {
-            if (inputs) {
+            if (inputs.length < 1) {
               ingredients.push(inputs)
               console.log(inputs)
               setInputs('')
