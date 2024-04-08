@@ -20,6 +20,9 @@ let ExampleController = class ExampleController {
     constructor(exampleService) {
         this.exampleService = exampleService;
     }
+    test() {
+        this.exampleService.sayHello();
+    }
     getExample(id, body) {
         return {
             name: body.name,
@@ -29,6 +32,12 @@ let ExampleController = class ExampleController {
     }
 };
 exports.ExampleController = ExampleController;
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], ExampleController.prototype, "test", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Query)('id')),

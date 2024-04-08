@@ -9,6 +9,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExampleService = void 0;
 const common_1 = require("@nestjs/common");
 let ExampleService = class ExampleService {
+    sayHello() {
+        console.log('Hello World');
+    }
 };
 exports.ExampleService = ExampleService;
 exports.ExampleService = ExampleService = __decorate([

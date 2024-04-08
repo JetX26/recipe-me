@@ -6,6 +6,11 @@ import { CreateExampleDto } from './dto/create-example.dto';
 export class ExampleController {
   constructor(private readonly exampleService: ExampleService) {}
 
+  @Get()
+  test() {
+    this.exampleService.sayHello();
+  }
+
   @Post()
   getExample(@Query('id') id: string, @Body() body: CreateExampleDto) {
     return {
