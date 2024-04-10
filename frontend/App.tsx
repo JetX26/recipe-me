@@ -27,7 +27,7 @@ export default function App() {
     container: {
       flex: 1,
       backgroundColor: "#fff",
-      padding: 32,
+      // padding: 32,
       height: useWindowDimensions().height,
       flexDirection: "column",
       alignItems: "center",
@@ -51,10 +51,15 @@ export default function App() {
 
     ingredientsStyle: {
       flex: 1,
-      flexDirection: "row",
-      alignItems: "center",
+      flexDirection: 'row',
+      alignItems: 'center',
       gap: 32,
     },
+
+    inputStyle: {
+      padding: '5%',
+      borderBlockColor: 'black'
+    }
 
     // logoText: {
     //   borderStyle: 'solid',
@@ -88,12 +93,20 @@ export default function App() {
     setIngredients(newIngredientsArray);
   };
 
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.nav}>
-        <Text>Recipe Me</Text>
-        <Text>History</Text>
+        <Text style={{ fontSize: 50, fontFamily: 'Cochin' }}>Recipe Me</Text>
+        {/* <Text style={{ fontSize: 20 }}>History</Text> */}
       </View>
+      <TextInput
+        ref={inputRef}
+        value={inputs}
+        onChangeText={setInputs}
+        placeholder="Type in your ingredients..."
+        style={styles.inputStyle}
+      ></TextInput>
       {recipe && recipe}
       <KeyboardAvoidingView
         style={styles.keybavoidview}
@@ -118,16 +131,11 @@ export default function App() {
             </View>
           );
         })}
-        <TextInput
-          ref={inputRef}
-          value={inputs}
-          onChangeText={setInputs}
-          placeholder="Type in your ingredients..."
-        ></TextInput>
+
         <Button
           title="Add Ingredient"
           onPress={() => {
-            if (inputs.length < 1) {
+            if (inputs.length > 0 && inputs.trim()) {
               ingredients.push(inputs)
               console.log(inputs)
               setInputs('')
