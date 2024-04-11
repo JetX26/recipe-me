@@ -1,9 +1,12 @@
 import React, { useEffect, useRef } from "react";
 
+
 import {
   Button,
+  Image,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -12,7 +15,8 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useState } from "react";
-import axios from "axios";
+
+
 
 export default function App() {
   const [inputs, setInputs] = useState("");
@@ -57,8 +61,14 @@ export default function App() {
     },
 
     inputStyle: {
-      padding: '5%',
-      borderBlockColor: 'black'
+      padding: '3%',
+      width: '50%',
+      borderRadius: 12,
+      borderWidth: 0.7
+    },
+
+    pressedHistoryBtn: {
+      scaleX: 2
     }
 
     // logoText: {
@@ -94,11 +104,22 @@ export default function App() {
   };
 
 
+
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.nav}>
         <Text style={{ fontSize: 50, fontFamily: 'Cochin' }}>Recipe Me</Text>
         {/* <Text style={{ fontSize: 20 }}>History</Text> */}
+
+        <Pressable>
+          <Image
+            source={require('./assets/history-icon.png')}
+            style={{ width: 30, height: 30 }}
+          >
+          </Image>
+        </Pressable>
+
       </View>
       <TextInput
         ref={inputRef}
