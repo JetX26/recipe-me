@@ -21,10 +21,8 @@ let RecipeController = class RecipeController {
         this.recipeService = recipeService;
     }
     getRecipe(body) {
-        return {
-            ingredients: body.ingredients,
-            id: body.id,
-        };
+        console.log(body.ingredients);
+        return this.recipeService.getRecipe(body.ingredients);
     }
 };
 exports.RecipeController = RecipeController;
