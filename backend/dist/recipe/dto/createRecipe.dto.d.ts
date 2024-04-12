@@ -1,4 +1,4 @@
 export declare class CreateRecipeDto {
-    ingredients: string;
+    ingredients: string[];
     id: string;
 }

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 
-
 import {
   Button,
   Image,
@@ -8,6 +7,7 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -15,17 +15,16 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useState } from "react";
-
-
+import axios from "axios";
 
 export default function App() {
-  const [inputs, setInputs] = useState("");
+  const [inputs, setInputs] = useState<string>("");
 
-  const [ingredients, setIngredients] = useState([""]);
+  const [ingredients, setIngredients] = useState<string[]>([""]);
 
-  const [recipe, setRecipe] = useState("");
+  const [recipe, setRecipe] = useState<string>("");
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<TextInput | null>(null);
 
   const styles = StyleSheet.create({
     container: {
@@ -55,21 +54,21 @@ export default function App() {
 
     ingredientsStyle: {
       flex: 1,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 32,
     },
 
     inputStyle: {
-      padding: '3%',
-      width: '50%',
+      padding: "3%",
+      width: "50%",
       borderRadius: 12,
-      borderWidth: 0.7
+      borderWidth: 0.7,
     },
 
     pressedHistoryBtn: {
-      scaleX: 2
-    }
+      scaleX: 2,
+    },
 
     // logoText: {
     //   borderStyle: 'solid',
@@ -79,16 +78,24 @@ export default function App() {
     // }
   });
 
-  const sendData = async () => {
+  const getRecipe = async () => {
     try {
-      // const { data } = await axios.post("http://localhost:3001/recipe", {
-      //   ingredientState,
-      //   id: "2",
-      // });
-      // if (data) setRecipe(data);
-      // console.log(data)
+      clearInputs();
+      setIngredients([]);
+      const { data } = await axios.post("http://localhost:3001/recipe", {
+        ingredients: ingredients,
+      });
+      if (data) setRecipe(data);
+      console.log(data);
     } catch (error) {
       throw new Error("Failed to get data");
+    }
+  };
+
+  const clearInputs = () => {
+    if (inputRef.current) {
+      const textInputElement = inputRef.current;
+      textInputElement.clear();
     }
   };
 
@@ -103,23 +110,18 @@ export default function App() {
     setIngredients(newIngredientsArray);
   };
 
-
-
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.nav}>
-        <Text style={{ fontSize: 50, fontFamily: 'Cochin' }}>Recipe Me</Text>
+        <Text style={{ fontSize: 50, fontFamily: "Cochin" }}>Recipe Me</Text>
         {/* <Text style={{ fontSize: 20 }}>History</Text> */}
 
         <Pressable>
           <Image
-            source={require('./assets/history-icon.png')}
+            source={require("./assets/history-icon.png")}
             style={{ width: 30, height: 30 }}
-          >
-          </Image>
+          ></Image>
         </Pressable>
-
       </View>
       <TextInput
         ref={inputRef}
@@ -128,7 +130,11 @@ export default function App() {
         placeholder="Type in your ingredients..."
         style={styles.inputStyle}
       ></TextInput>
-      {recipe && recipe}
+      {recipe && (
+        <ScrollView>
+          <Text>{recipe}</Text>
+        </ScrollView>
+      )}
       <KeyboardAvoidingView
         style={styles.keybavoidview}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -157,19 +163,17 @@ export default function App() {
           title="Add Ingredient"
           onPress={() => {
             if (inputs.length > 0 && inputs.trim()) {
-              ingredients.push(inputs)
-              console.log(inputs)
-              setInputs('')
+              ingredients.push(inputs);
+              console.log(inputs);
+              setInputs("");
             } else {
               alert("Please type in something :)");
             }
 
-            if (inputRef.current) {
-              const textInputElement = inputRef.current as TextInput;
-              textInputElement.clear();
-            }
+            clearInputs();
           }}
         ></Button>
+        <Button title="Get Recipe" onPress={getRecipe}></Button>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

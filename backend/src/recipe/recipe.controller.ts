@@ -8,9 +8,7 @@ export class RecipeController {
 
   @Post()
   getRecipe(@Body() body: CreateRecipeDto) {
-    return {
-      ingredients: body.ingredients,
-      id: body.id,
-    };
+    console.log(body.ingredients);
+    return this.recipeService.getRecipe(body.ingredients);
   }
 }
