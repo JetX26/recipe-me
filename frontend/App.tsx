@@ -31,7 +31,7 @@ export default function App() {
     container: {
       flex: 1,
       backgroundColor: "#fff",
-      // padding: 32,
+      padding: 32,
       height: useWindowDimensions().height,
       flexDirection: "column",
       alignItems: "center",
