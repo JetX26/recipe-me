@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 
-
 import {
   Button,
   Image,
@@ -16,8 +15,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useState } from "react";
-
-
+import axios from "axios";
 
 export default function App() {
   const [inputs, setInputs] = useState<string>("");
@@ -62,21 +60,15 @@ export default function App() {
     },
 
     inputStyle: {
-<<<<<<< Updated upstream
-      padding: '3%',
-      width: '50%',
+      padding: "3%",
+      width: "50%",
       borderRadius: 12,
-      borderWidth: 0.7
+      borderWidth: 0.7,
     },
 
     pressedHistoryBtn: {
-      scaleX: 2
-    }
-=======
-      padding: "5%",
-      borderBlockColor: "black",
+      scaleX: 2,
     },
->>>>>>> Stashed changes
 
     // logoText: {
     //   borderStyle: 'solid',
@@ -118,12 +110,6 @@ export default function App() {
     setIngredients(newIngredientsArray);
   };
 
-<<<<<<< Updated upstream
-
-
-
-=======
->>>>>>> Stashed changes
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.nav}>
@@ -132,12 +118,10 @@ export default function App() {
 
         <Pressable>
           <Image
-            source={require('./assets/history-icon.png')}
+            source={require("./assets/history-icon.png")}
             style={{ width: 30, height: 30 }}
-          >
-          </Image>
+          ></Image>
         </Pressable>
-
       </View>
       <TextInput
         ref={inputRef}
