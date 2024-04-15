@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { BlurView } from 'expo-blur'
-
+import { BlurView } from "expo-blur";
 
 import {
   Button,
@@ -15,7 +14,7 @@ import {
   TextInput,
   View,
   useWindowDimensions,
-  Modal
+  Modal,
 } from "react-native";
 import { useState } from "react";
 import axios from "axios";
@@ -29,7 +28,7 @@ export default function App() {
 
   const inputRef = useRef<TextInput | null>(null);
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   const styles = StyleSheet.create({
     container: {
@@ -49,22 +48,22 @@ export default function App() {
 
     nav: {
       flex: 1,
-      flexDirection: 'row',
+      flexDirection: "row",
       justifyContent: "space-between",
-      width: '100%',
-      padding: '3%'
+      width: "100%",
+      padding: "3%",
     },
 
     ingredientsContainerStyle: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       gap: 12,
-      height: 'auto'
+      height: "auto",
     },
 
     navItems: {
-      flex: 1
+      flex: 1,
     },
 
     inputStyle: {
@@ -72,9 +71,8 @@ export default function App() {
       minWidth: "50%",
       borderRadius: 12,
       borderWidth: 0.7,
-      margin: 12
+      margin: 12,
     },
-
 
     pressedHistoryBtn: {
       scaleX: 2,
@@ -82,20 +80,18 @@ export default function App() {
 
     modalContainer: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent background
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.5)", // semi-transparent background
     },
     modalContent: {
-      backgroundColor: 'white',
+      backgroundColor: "white",
       padding: 20,
       borderRadius: 10,
-      width: '80%', // adjust width as needed
-      maxHeight: '80%', // adjust maximum height as needed
+      width: "80%", // adjust width as needed
+      maxHeight: "80%", // adjust maximum height as needed
     },
-
   });
-
 
   const getRecipe = async () => {
     try {
@@ -111,19 +107,16 @@ export default function App() {
     }
   };
 
-
-  const clearInputs = () => {
+  const clearInputs = (): void => {
     if (inputRef.current) {
       const textInputElement = inputRef.current;
       textInputElement.clear();
     }
   };
 
-
   useEffect(() => {
     console.log(inputs);
   }, [inputs]);
-
 
   const handleRemoveItem = (itemToRemove: String) => {
     const newIngredientsArray = ingredients.filter(
@@ -132,14 +125,15 @@ export default function App() {
     setIngredients(newIngredientsArray);
   };
 
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.nav}>
         <Text style={{ fontSize: 50, zIndex: 99 }}>Recipe Me</Text>
-        <Pressable onPress={() => {
-          setIsOpen(true)
-        }}>
+        <Pressable
+          onPress={() => {
+            setIsOpen(true);
+          }}
+        >
           <Image
             source={require("./assets/cooking-pan.png")}
             style={{ width: 30, height: 30 }}
@@ -151,12 +145,17 @@ export default function App() {
         </Pressable>
       </View>
 
-      {
-        isOpen && <ScrollView style={{ borderWidth: 1, borderRadius: 5 }}>
-
+      {isOpen && (
+        <ScrollView style={{ borderWidth: 1, borderRadius: 5 }}>
           <Modal visible={isOpen} animationType="slide">
-
-            <View style={{ flex: 1, backgroundColor: 'blur', padding: 60, height: 'auto' }}>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: "blur",
+                padding: 60,
+                height: "auto",
+              }}
+            >
               {ingredients.map((item, id) => {
                 return (
                   <View key={id} style={styles.ingredientsContainerStyle}>
@@ -176,16 +175,16 @@ export default function App() {
                   </View>
                 );
               })}
-              <Button onPress={() => {
-                setIsOpen(false)
-              }} title="Close">
-              </Button>
+              <Button
+                onPress={() => {
+                  setIsOpen(false);
+                }}
+                title="Close"
+              ></Button>
             </View>
-
           </Modal>
-
         </ScrollView>
-      }
+      )}
 
       <View>
         <TextInput
@@ -219,9 +218,11 @@ export default function App() {
               clearInputs();
             }}
           ></Button>
-          {ingredients.length > 0 && <Button title="Get Recipe" onPress={getRecipe}></Button>}
+          {ingredients.length > 0 && (
+            <Button title="Get Recipe" onPress={getRecipe}></Button>
+          )}
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView >
+    </SafeAreaView>
   );
 }
