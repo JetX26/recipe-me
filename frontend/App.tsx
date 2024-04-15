@@ -97,9 +97,12 @@ export default function App() {
     try {
       clearInputs();
       setIngredients([]);
-      const { data } = await axios.post("http://localhost:3000/recipe", {
-        ingredients: ingredients,
-      });
+      const { data } = await axios.post(
+        "https://recipe-me.onrender.com/recipe",
+        {
+          ingredients: ingredients,
+        }
+      );
       if (data) setRecipe(data);
       console.log(data);
     } catch (error) {
