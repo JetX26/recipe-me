@@ -60,7 +60,7 @@ export default function App() {
       alignItems: 'center',
       justifyContent: 'space-between',
       gap: 12,
-      height: 'auto'
+      width: '100%'
     },
 
     navItems: {
@@ -81,17 +81,19 @@ export default function App() {
     },
 
     modalContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent background
-    },
-    modalContent: {
-      backgroundColor: 'white',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)', // Semi-transparent background
       padding: 20,
       borderRadius: 10,
-      width: '80%', // adjust width as needed
-      maxHeight: '80%', // adjust maximum height as needed
+
+    },
+
+    modalContent: {
+      backgroundColor: 'rgba(255,255,255,0.5)',
+      padding: 60,
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      height: '100%'
     },
 
   });
@@ -154,9 +156,10 @@ export default function App() {
       {
         isOpen && <ScrollView style={{ borderWidth: 1, borderRadius: 5 }}>
 
-          <Modal visible={isOpen} animationType="slide">
+          <Modal style={styles.modalContainer} visible={isOpen} animationType="slide">
 
-            <View style={{ flex: 1, backgroundColor: 'blur', padding: 60, height: 'auto' }}>
+            <View style={styles.modalContent}>
+
               {ingredients.map((item, id) => {
                 return (
                   <View key={id} style={styles.ingredientsContainerStyle}>
@@ -181,7 +184,6 @@ export default function App() {
               }} title="Close">
               </Button>
             </View>
-
           </Modal>
 
         </ScrollView>
