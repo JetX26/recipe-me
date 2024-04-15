@@ -23,7 +23,10 @@ model entry {
 }
 
 model user {
-  id      String  @id @default(auto()) @map("_id") @db.ObjectId
-  clerkid String  @unique
-  history entry[]
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  password String?
+  email    String? @unique
+  clerkid  String  @unique
+  history  entry[]
 }
