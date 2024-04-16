@@ -1,6 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import { BlurView } from 'expo-blur'
-
 
 import {
   Button,
@@ -15,7 +13,7 @@ import {
   TextInput,
   View,
   useWindowDimensions,
-  Modal
+  Modal,
 } from "react-native";
 import { useState } from "react";
 import axios from "axios";
@@ -27,9 +25,13 @@ export default function App() {
 
   const [recipe, setRecipe] = useState<string>("");
 
+  const [savedRecipes, setSavedRecipes] = useState([''])
+
   const inputRef = useRef<TextInput | null>(null);
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+
+  const [savedRecipesModal, setSavedRecipesModal] = useState(false)
 
   const styles = StyleSheet.create({
     container: {
@@ -42,29 +44,27 @@ export default function App() {
 
     keybavoidview: {
       flex: 1,
-      flexDirection: "column",
-      justifyContent: "space-between",
-      alignItems: "center",
+      justifyContent: 'center'
     },
 
     nav: {
       flex: 1,
-      flexDirection: 'row',
+      flexDirection: "row",
       justifyContent: "space-between",
-      width: '100%',
-      padding: '3%'
+      width: "100%",
+      padding: "3%",
     },
 
     ingredientsContainerStyle: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       gap: 12,
-      width: '100%'
+      width: '100%',
     },
 
     navItems: {
-      flex: 1
+      flex: 1,
     },
 
     inputStyle: {
@@ -72,23 +72,20 @@ export default function App() {
       minWidth: "50%",
       borderRadius: 12,
       borderWidth: 0.7,
-      margin: 12
+      margin: 12,
     },
 
+    inputStyleContainer: {
+      flex: 1,
+    },
 
     pressedHistoryBtn: {
       scaleX: 2,
     },
 
-    modalContainer: {
-      backgroundColor: 'rgba(255, 255, 255, 0.5)', // Semi-transparent background
-      padding: 20,
-      borderRadius: 10,
-
-    },
 
     modalContent: {
-      backgroundColor: 'rgba(255,255,255,0.5)',
+      backgroundColor: '#e5e5e5',
       padding: 60,
       flexDirection: 'column',
       alignItems: 'center',
@@ -96,16 +93,22 @@ export default function App() {
       height: '100%'
     },
 
+    iOSStyling: {
+      padding: 32,
+      paddingTop: '20%',
+    }
   });
-
 
   const getRecipe = async () => {
     try {
       clearInputs();
       setIngredients([]);
-      const { data } = await axios.post("http://localhost:3000/recipe", {
-        ingredients: ingredients,
-      });
+      const { data } = await axios.post(
+        "https://recipe-me.onrender.com/recipe",
+        {
+          ingredients: ingredients,
+        }
+      );
       if (data) setRecipe(data);
       console.log(data);
     } catch (error) {
@@ -113,19 +116,16 @@ export default function App() {
     }
   };
 
-
-  const clearInputs = () => {
+  const clearInputs = (): void => {
     if (inputRef.current) {
       const textInputElement = inputRef.current;
       textInputElement.clear();
     }
   };
 
-
   useEffect(() => {
     console.log(inputs);
   }, [inputs]);
-
 
   const handleRemoveItem = (itemToRemove: String) => {
     const newIngredientsArray = ingredients.filter(
@@ -134,60 +134,35 @@ export default function App() {
     setIngredients(newIngredientsArray);
   };
 
+  const handleRemoveSavedRecipe = (itemToRemove: String) => {
+    const newRecipesArray = ingredients.filter(
+      (item) => item !== itemToRemove
+    );
+    setSavedRecipes(newRecipesArray);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.nav}>
         <Text style={{ fontSize: 50, zIndex: 99 }}>Recipe Me</Text>
         <Pressable onPress={() => {
-          setIsOpen(true)
+          setModalVisible(true)
+          console.log('modal should be visible')
         }}>
           <Image
             source={require("./assets/cooking-pan.png")}
             style={{ width: 30, height: 30 }}
           ></Image>
+        </Pressable>
+        <Pressable onPress={() => {
+          setSavedRecipesModal(true)
+        }}>
           <Image
             source={require("./assets/history-icon.png")}
             style={{ width: 30, height: 30 }}
           ></Image>
         </Pressable>
       </View>
-
-      {
-        isOpen && <ScrollView style={{ borderWidth: 1, borderRadius: 5 }}>
-
-          <Modal style={styles.modalContainer} visible={isOpen} animationType="slide">
-
-            <View style={styles.modalContent}>
-
-              {ingredients.map((item, id) => {
-                return (
-                  <View key={id} style={styles.ingredientsContainerStyle}>
-                    <Text>{item}</Text>
-                    {item && (
-                      <View style={{ padding: 4 }}>
-                        <Text
-                          onPress={() => {
-                            handleRemoveItem(item);
-                          }}
-                          style={{ fontSize: 17, fontWeight: "bold" }}
-                        >
-                          X
-                        </Text>
-                      </View>
-                    )}
-                  </View>
-                );
-              })}
-              <Button onPress={() => {
-                setIsOpen(false)
-              }} title="Close">
-              </Button>
-            </View>
-          </Modal>
-
-        </ScrollView>
-      }
 
       <View>
         <TextInput
@@ -197,17 +172,12 @@ export default function App() {
           placeholder="Type in your ingredients..."
           style={styles.inputStyle}
         ></TextInput>
-        {recipe && (
-          <ScrollView>
-            <Text>{recipe}</Text>
-          </ScrollView>
-        )}
+
+
+
       </View>
-      <KeyboardAvoidingView
-        style={styles.keybavoidview}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <View style={{ flex: 1, gap: 12 }}>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <View>
           <Button
             title="Add Ingredient"
             onPress={() => {
@@ -221,9 +191,93 @@ export default function App() {
               clearInputs();
             }}
           ></Button>
-          {ingredients.length > 0 && <Button title="Get Recipe" onPress={getRecipe}></Button>}
+          {ingredients.length > 0 && (
+            <Button title="Get Recipe" onPress={getRecipe}></Button>
+          )}
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView >
+
+
+      {ingredients &&
+        <ScrollView style={{ paddingHorizontal: 24, flex: 1 }}>
+          {ingredients.map((item, id) => {
+            return (
+              <View key={id} style={styles.ingredientsContainerStyle}>
+                <Text>{item}</Text>
+                {item && (
+                  <View style={{ padding: 4 }}>
+                    <Text
+                      onPress={() => {
+                        handleRemoveItem(item);
+                      }}
+                      style={{ fontSize: 17, fontWeight: "bold", borderColor: 'black', borderWidth: 1, borderRadius: 10, padding: 2 }}
+                    >
+                      X
+                    </Text>
+                  </View>
+                )}
+              </View>
+            );
+          })}
+        </ScrollView>
+      }
+
+      <View>
+        <Modal
+          animationType="slide"
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible)
+          }}
+        >
+          <View style={[styles.container, Platform.OS === 'ios' && styles.iOSStyling]}>
+            <Text>{recipe}</Text>
+          </View>
+          <View style={{ flex: 1, flexDirection: 'column-reverse' }}>
+            <Button onPress={() => {
+              setModalVisible(false)
+            }} title="Close"></Button>
+            <Button
+              disabled={savedRecipes.includes(recipe)}
+              onPress={() => {
+                if (!savedRecipes.includes(recipe)) {
+                  setSavedRecipes([...savedRecipes, recipe])
+                }
+                setModalVisible(false)
+              }} title="Save Recipe"></Button>
+          </View>
+        </Modal>
+      </View>
+
+      <Modal
+        animationType="slide"
+        visible={savedRecipesModal}
+        onRequestClose={() => {
+          setSavedRecipesModal(!savedRecipesModal)
+        }}
+      >
+        <ScrollView>
+          {savedRecipes.map((item, id) => {
+            return <View key={id}>
+              <Text>{item}</Text>
+              <Button title="Delete Recipe"></Button>
+            </View>
+          })}
+          <View style={[styles.container, Platform.OS === 'ios' && styles.iOSStyling]}>
+            {savedRecipes.length === 0 ? <Text>No saved recipes</Text> : <Text>{savedRecipes}</Text>}
+          </View>
+          <View style={{ flex: 1, flexDirection: 'column-reverse' }}>
+            <Button onPress={() => {
+              setSavedRecipesModal(false)
+            }} title="Close"></Button>
+          </View>
+        </ScrollView>
+      </Modal>
+
+
+
+    </SafeAreaView>
+
+
   );
 }
