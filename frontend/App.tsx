@@ -34,15 +34,14 @@ export default function App() {
 
   const [inputs, setInputs] = useState<string>("");
 
-  const [recipe, setRecipe] = useState<string>("");
-
-  const [savedRecipes, setSavedRecipes] = useState<string[]>([]);
+  const [currentRecipe, setCurrentRecipe] = useState<string>("");
 
   const inputRef = useRef<TextInput | null>(null);
 
   const [loading, setLoading] = useState(false);
 
-  const { ingredients, addIngredient, clearIngredients } = useStore();
+  const { ingredients, addIngredient, clearIngredients, saveRecipe, recipe } =
+    useStore();
 
   const styles = StyleSheet.create({
     container: {
@@ -123,16 +122,12 @@ export default function App() {
           ingredients: ingredients,
         }
       );
-      if (data) setRecipe(data);
+      if (data) setCurrentRecipe(data);
       setLoading(false);
     } catch (error) {
       throw new Error("Failed to get data");
     }
   };
-
-  useEffect(() => {
-    console.log(savedRecipes);
-  }, [savedRecipes]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -216,17 +211,13 @@ export default function App() {
                   <ActivityIndicator size="small"></ActivityIndicator>
                 </View>
               ) : (
-                <Text>{recipe}</Text>
+                <Text>{currentRecipe}</Text>
               )}
               <View>
                 <Button
-                  disabled={savedRecipes.includes(recipe)}
+                  disabled={recipe.includes(currentRecipe)}
                   onPress={() => {
-                    if (!savedRecipes.includes(recipe)) {
-                      setSavedRecipes((prev) => {
-                        return [...prev, recipe];
-                      });
-                    }
+                    saveRecipe(currentRecipe);
                     setModalVisible(false);
                     alert("Recipe saved");
                   }}
@@ -250,7 +241,7 @@ export default function App() {
           }}
         >
           <ScrollView>
-            {savedRecipes.length === 0 ? (
+            {recipe.length === 0 ? (
               <View
                 style={[
                   styles.container,
@@ -267,7 +258,7 @@ export default function App() {
               </View>
             ) : (
               <View>
-                {savedRecipes.map((item, id) => {
+                {recipe.map((item, id) => {
                   return <SavedRecipe recipeItem={item} key={id}></SavedRecipe>;
                 })}
                 <Button

@@ -11,6 +11,7 @@ type UseStoreType = {
   clearIngredients: () => void;
   recipe: string[];
   removeRecipe: (recipe: string) => void;
+  saveRecipe: (recipe: string) => void;
 };
 
 export const useStore = create<UseStoreType>((set, get) => ({
@@ -46,6 +47,11 @@ export const useStore = create<UseStoreType>((set, get) => ({
     });
   },
   recipe: [],
+  saveRecipe: (recipe: string) => {
+    set({
+      recipe: [...get().recipe, recipe],
+    });
+  },
   removeRecipe: (recipe: string) => {
     const filteredRecipes = get().recipe.filter((item) => item !== recipe);
     console.log(filteredRecipes);
