@@ -45,11 +45,12 @@ export const useStore = create<UseStoreType>((set, get) => ({
       ingredients: [],
     });
   },
-  recipe: [""],
+  recipe: [],
   removeRecipe: (recipe: string) => {
-    const findRecipe = get().recipe.filter((item) => item !== recipe);
+    const filteredRecipes = get().recipe.filter((item) => item !== recipe);
+    console.log(filteredRecipes);
     set({
-      ingredients: findRecipe,
+      recipe: filteredRecipes,
     });
   },
 }));

@@ -203,48 +203,44 @@ export default function App() {
             setModalVisible(false);
           }}
         >
-          <View
-            style={[
-              styles.container,
-              Platform.OS === "ios" && styles.iOSPadding,
-            ]}
-          >
-            {loading ? (
-              <View style={{ gap: 12, alignItems: "center" }}>
-                <Text>Getting recipe...</Text>
-                <ActivityIndicator size="small"></ActivityIndicator>
+          <ScrollView>
+            <View
+              style={[
+                styles.container,
+                Platform.OS === "ios" && styles.iOSPadding,
+              ]}
+            >
+              {loading ? (
+                <View style={{ gap: 12, alignItems: "center" }}>
+                  <Text>Getting recipe...</Text>
+                  <ActivityIndicator size="small"></ActivityIndicator>
+                </View>
+              ) : (
+                <Text>{recipe}</Text>
+              )}
+              <View>
+                <Button
+                  disabled={savedRecipes.includes(recipe)}
+                  onPress={() => {
+                    if (!savedRecipes.includes(recipe)) {
+                      setSavedRecipes((prev) => {
+                        return [...prev, recipe];
+                      });
+                    }
+                    setModalVisible(false);
+                    alert("Recipe saved");
+                  }}
+                  title="Save Recipe"
+                ></Button>
+                <Button
+                  onPress={() => {
+                    setModalVisible(false);
+                  }}
+                  title="Close"
+                ></Button>
               </View>
-            ) : (
-              <Text>{recipe}</Text>
-            )}
-          </View>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "column-reverse",
-              paddingBottom: "10%",
-            }}
-          >
-            <Button
-              onPress={() => {
-                setModalVisible(false);
-              }}
-              title="Close"
-            ></Button>
-            <Button
-              disabled={savedRecipes.includes(recipe)}
-              onPress={() => {
-                if (!savedRecipes.includes(recipe)) {
-                  setSavedRecipes((prev) => {
-                    return [...prev, recipe];
-                  });
-                }
-                setModalVisible(false);
-                alert("Recipe saved");
-              }}
-              title="Save Recipe"
-            ></Button>
-          </View>
+            </View>
+          </ScrollView>
         </Modal>
         <Modal
           animationType="slide"
@@ -270,14 +266,7 @@ export default function App() {
                 ></Button>
               </View>
             ) : (
-              <View
-                style={{
-                  borderColor: "black",
-                  borderBlockColor: "black",
-                  borderWidth: 1,
-                  flex: 1,
-                }}
-              >
+              <View>
                 {savedRecipes.map((item, id) => {
                   return <SavedRecipe recipeItem={item} key={id}></SavedRecipe>;
                 })}
